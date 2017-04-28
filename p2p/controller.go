@@ -396,9 +396,9 @@ func (c *Controller) route() {
 			message := <-connection.ReceiveChannel
 			switch message.(type) {
 			case ConnectionCommand:
-				c.handleConnectionCommand(message.(ConnectionCommand), *connection)
+				c.handleConnectionCommand(message.(ConnectionCommand), connection)
 			case ConnectionParcel:
-				c.handleParcelReceive(message, peerHash, *connection)
+				c.handleParcelReceive(message, peerHash, connection)
 			default:
 				logfatal("ctrlr", "route() unknown message?: %+v ", message)
 			}
@@ -491,7 +491,7 @@ func (c *Controller) doDirectedSend(parcel Parcel) {
 }
 
 // handleParcelReceive takes a parcel from the network and annotates it for the application then routes it.
-func (c *Controller) handleParcelReceive(message interface{}, peerHash string, connection Connection) {
+func (c *Controller) handleParcelReceive(message interface{}, peerHash string, connection *Connection) {
 	TotalMessagesRecieved++
 	parameters := message.(ConnectionParcel)
 	parcel := parameters.Parcel
@@ -521,7 +521,7 @@ func (c *Controller) handleParcelReceive(message interface{}, peerHash string, c
 
 }
 
-func (c *Controller) handleConnectionCommand(command ConnectionCommand, connection Connection) {
+func (c *Controller) handleConnectionCommand(command ConnectionCommand, connection *Connection) {
 	switch command.Command {
 	case ConnectionUpdateMetrics:
 		c.connectionMetrics[connection.peer.Hash] = command.Metrics
