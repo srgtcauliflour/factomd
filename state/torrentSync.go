@@ -23,23 +23,23 @@ func (s *State) StartTorrentSyncing() error {
 	var done uint32 = 0
 	for {
 		// Leaders do not need to sync torrents, they need to upload
-		if s.IsLeader() {
-			// If we have not uploaded a height we have completed, increment done and upload
-			if done < s.EntryDBHeightComplete {
-				for done < s.EntryDBHeightComplete {
-					done++
-					s.UploadDBState(done)
-				}
-			} else {
-				// If we did not just launch, and we are synced, and uploaded --> Long sleep
-				if s.EntryDBHeightComplete > 0 && s.GetHighestKnownBlock() == s.EntryDBHeightComplete {
-					time.Sleep(30 * time.Second)
-				}
-				// Short sleep otherwise, still loading some from disk
-				time.Sleep(5 * time.Second)
+		//if s.IsLeader() {
+		// If we have not uploaded a height we have completed, increment done and upload
+		if done < s.EntryDBHeightComplete {
+			for done < s.EntryDBHeightComplete {
+				done++
+				s.UploadDBState(done)
 			}
-			continue
+		} else {
+			// If we did not just launch, and we are synced, and uploaded --> Long sleep
+			if s.EntryDBHeightComplete > 0 && s.GetHighestKnownBlock() == s.EntryDBHeightComplete {
+				time.Sleep(30 * time.Second)
+			}
+			// Short sleep otherwise, still loading some from disk
+			time.Sleep(5 * time.Second)
 		}
+		continue
+		//}
 
 		// We can adjust the sleep at the end depending on what we do in the loop
 		// this pass
