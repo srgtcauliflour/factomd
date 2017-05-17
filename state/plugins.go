@@ -221,14 +221,14 @@ func (s *State) uploadDBState(sequence uint32) error {
 			}
 			fullData = append(fullData, data...)
 		}
-		if s.IsLeader() {
-			err := s.DBStateManager.UploadDBStateBytes(fullData, true)
-			if err != nil {
-				return fmt.Errorf("[TorrentUpload] Torrent failed to upload: %s\n", err.Error())
-			}
-		} else {
-			// s.DBStateManager.UploadDBStateBytes(data, false)
+		//if s.IsLeader() {
+		err := s.DBStateManager.UploadDBStateBytes(fullData, true)
+		if err != nil {
+			return fmt.Errorf("[TorrentUpload] Torrent failed to upload: %s\n", err.Error())
 		}
+		//} else {
+		// s.DBStateManager.UploadDBStateBytes(data, false)
+		//}
 	}
 	return nil
 }
