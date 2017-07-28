@@ -357,17 +357,17 @@ func fBlockToResp(block interfaces.IFBlock) (interface{}, *primitives.JSONError)
 	}
 
 	// Correct any addresses that get ToLowered()
-	for _, t := range block.GetTransactions() {
-		for _, a := range t.GetInputs() {
-			b.data = correctLowerCasedStringToOriginal(b.data, a.GetUserAddress())
-		}
-		for _, a := range t.GetOutputs() {
-			b.data = correctLowerCasedStringToOriginal(b.data, a.GetUserAddress())
-		}
-		for _, a := range t.GetECOutputs() {
-			b.data = correctLowerCasedStringToOriginal(b.data, a.GetUserAddress())
-		}
-	}
+	// for _, t := range block.GetTransactions() {
+	// 	for _, a := range t.GetInputs() {
+	// 		b.data = correctLowerCasedStringToOriginal(b.data, a.GetUserAddress())
+	// 	}
+	// 	for _, a := range t.GetOutputs() {
+	// 		b.data = correctLowerCasedStringToOriginal(b.data, a.GetUserAddress())
+	// 	}
+	// 	for _, a := range t.GetECOutputs() {
+	// 		b.data = correctLowerCasedStringToOriginal(b.data, a.GetUserAddress())
+	// 	}
+	// }
 
 	resp.FBlock = b
 	resp.RawData = hex.EncodeToString(raw)

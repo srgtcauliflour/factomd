@@ -470,7 +470,7 @@ func (t *Transaction) UnmarshalBinaryData(data []byte) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		t.Inputs[i].(*TransAddress).UserAddress = primitives.ConvertFctAddressToUserStr(t.Inputs[i].(*TransAddress).Address)
+		//t.Inputs[i].(*TransAddress).UserAddress = primitives.ConvertFctAddressToUserStr(t.Inputs[i].(*TransAddress).Address)
 	}
 	for i, _ := range t.Outputs {
 		t.Outputs[i] = new(TransAddress)
@@ -478,7 +478,7 @@ func (t *Transaction) UnmarshalBinaryData(data []byte) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		t.Outputs[i].(*TransAddress).UserAddress = primitives.ConvertFctAddressToUserStr(t.Outputs[i].(*TransAddress).Address)
+		//t.Outputs[i].(*TransAddress).UserAddress = primitives.ConvertFctAddressToUserStr(t.Outputs[i].(*TransAddress).Address)
 	}
 	for i, _ := range t.OutECs {
 		t.OutECs[i] = new(TransAddress)
@@ -486,7 +486,7 @@ func (t *Transaction) UnmarshalBinaryData(data []byte) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		t.OutECs[i].(*TransAddress).UserAddress = primitives.ConvertECAddressToUserStr(t.OutECs[i].(*TransAddress).Address)
+		//t.OutECs[i].(*TransAddress).UserAddress = primitives.ConvertECAddressToUserStr(t.OutECs[i].(*TransAddress).Address)
 	}
 
 	t.RCDs = make([]interfaces.IRCD, len(t.Inputs))
