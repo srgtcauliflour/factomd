@@ -341,6 +341,10 @@ func HandleV2FBlockByHeight(state interfaces.IState, params interface{}) (interf
 		return nil, NewBlockNotFoundError()
 	}
 
+	if heightRequest.Height == 0 {
+		GensisFblockRetrieveCall.Inc()
+	}
+
 	return fBlockToResp(block)
 }
 

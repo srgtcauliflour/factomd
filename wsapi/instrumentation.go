@@ -5,6 +5,11 @@ import (
 )
 
 var (
+	GensisFblockRetrieveCall = prometheus.NewCounter(prometheus.CounterOpts{
+		Name: "factomd_wsapi_v2_gensis_fblock_count",
+		Help: "How many Gensis FBlocks are being asked for",
+	})
+
 	HandleV2APICallGeneral = prometheus.NewSummary(prometheus.SummaryOpts{
 		Name: "factomd_wsapi_v2_api_general_call_ns",
 		Help: "Time it takes to compelete a call",
@@ -171,6 +176,7 @@ func RegisterPrometheus() {
 	}
 	registered = true
 
+	prometheus.MustRegister(GensisFblockRetrieveCall)
 	prometheus.MustRegister(HandleV2APICallGeneral)
 	prometheus.MustRegister(HandleV2APICallChainHead)
 	prometheus.MustRegister(HandleV2APICallCommitChain)
