@@ -87,6 +87,7 @@ func (f *P2PProxy) Init(fromName, toName string) interfaces.IPeer {
 	f.FromName = fromName
 	f.BroadcastOut = make(chan interface{}, p2p.StandardChannelSize)
 	f.BroadcastIn = make(chan interface{}, p2p.StandardChannelSize)
+	f.logger = proxyLogger.WithField("node", fromName)
 
 	return f
 }
