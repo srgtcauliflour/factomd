@@ -348,7 +348,7 @@ func NetworkOutputs(fnode *FactomNode) {
 						if i != p || wt > 1 {
 							bco := fmt.Sprintf("%s/%d/%d", "BCast", p, i)
 							fnode.MLog.Add2(fnode, true, peer.GetNameTo(), bco, true, msg)
-							if !fnode.State.GetNetStateOff() { // Don't send him broadcast message if he is off
+							if !fnode.State.GetNetStateOff() {
 								preSendTime := time.Now()
 								peer.Send(msg)
 								sendTime := time.Since(preSendTime)

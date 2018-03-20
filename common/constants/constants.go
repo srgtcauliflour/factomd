@@ -61,6 +61,15 @@ const (
 	NUM_MESSAGES // Not used, just a counter for the number of messages.
 )
 
+// Entry Credit Block entries
+const (
+	ECIDServerIndexNumber byte = iota // 0 Must be these values, per the specification
+	ECIDMinuteNumber                  // 1
+	ECIDChainCommit                   // 2
+	ECIDEntryCommit                   // 3
+	ECIDBalanceIncrease               // 4
+)
+
 func MessageName(Type byte) string {
 	switch Type {
 	case EOM_MSG:
@@ -158,10 +167,9 @@ const (
 	TIME_TEST       = 4 // Checks the time_stamp;  Don't put actual hashes into the map with this.
 	REVEAL_REPLAY   = 8 // Checks for Reveal Entry Replays ... No duplicate Entries within our 4 hours!
 
-	// FReplay -- Block based Replay filter constructed by processing the blocks, from the database
+	// FReplay -- Block based Replay filter consttructed by processing the blocks, from the database
 	//            then from blocks either passed to a node, or constructed by messages.
-	BLOCK_REPLAY = 16 // Ensures we don't add the same transaction to multiple blocks.
-	//todo: Clay -- I changed this to not match in an experiment
+	BLOCK_REPLAY = 1 // Ensures we don't add the same transaction to multiple blocks.
 
 	ADDRESS_LENGTH = 32 // Length of an Address or a Hash or Public Key
 	// length of a Private Key

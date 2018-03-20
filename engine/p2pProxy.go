@@ -7,6 +7,8 @@ package engine
 import (
 	"fmt"
 
+	// "github.com/FactomProject/factomd/common/constants"
+
 	"github.com/FactomProject/factomd/common/interfaces"
 	"github.com/FactomProject/factomd/common/primitives"
 	"github.com/FactomProject/factomd/p2p"
@@ -83,7 +85,6 @@ func (f *P2PProxy) BytesIn() int {
 func (f *P2PProxy) Init(fromName, toName string) interfaces.IPeer {
 	f.ToName = toName
 	f.FromName = fromName
-	f.logger = proxyLogger.WithField("node", fromName)
 	f.BroadcastOut = make(chan interface{}, p2p.StandardChannelSize)
 	f.BroadcastIn = make(chan interface{}, p2p.StandardChannelSize)
 
