@@ -57,4 +57,5 @@ type FactomParams struct {
 	StdoutLog                string
 	StderrLog                string
 	DebugLogRegEx            string
+	DisablePrometheus        bool
 }

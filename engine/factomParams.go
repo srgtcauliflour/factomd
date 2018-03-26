@@ -21,75 +21,81 @@ import (
 
 func ParseCmdLine(args []string) *FactomParams {
 	p := &Params // Global copy of decoded Params global.Params
+	params := flag.NewFlagSet("factomd_params", flag.ExitOnError)
 
-	ackBalanceHashPtr := flag.Bool("balancehash", true, "If false, then don't pass around balance hashes")
-	enablenetPtr := flag.Bool("enablenet", true, "Enable or disable networking")
-	waitEntriesPtr := flag.Bool("waitentries", false, "Wait for Entries to be validated prior to execution of messages")
-	listenToPtr := flag.Int("node", 0, "Node Number the simulator will set as the focus")
-	cntPtr := flag.Int("count", 1, "The number of nodes to generate")
-	netPtr := flag.String("net", "tree", "The default algorithm to build the network connections")
-	fnetPtr := flag.String("fnet", "", "Read the given file to build the network connections")
-	dropPtr := flag.Int("drop", 0, "Number of messages to drop out of every thousand")
-	journalPtr := flag.String("journal", "", "Rerun a Journal of messages")
-	journalingPtr := flag.Bool("journaling", false, "Write a journal of all messages received. Default is off.")
-	followerPtr := flag.Bool("follower", false, "If true, force node to be a follower.  Only used when replaying a journal.")
-	leaderPtr := flag.Bool("leader", true, "If true, force node to be a leader.  Only used when replaying a journal.")
-	dbPtr := flag.String("db", "", "Override the Database in the Config file and use this Database implementation. Options Map, LDB, or Bolt")
-	cloneDBPtr := flag.String("clonedb", "", "Override the main node and use this database for the clones in a Network.")
-	networkNamePtr := flag.String("network", "", "Network to join: MAIN, TEST or LOCAL")
-	peersPtr := flag.String("peers", "", "Array of peer addresses. ")
-	blkTimePtr := flag.Int("blktime", 0, "Seconds per block.  Production is 600.")
+	ackBalanceHashPtr := params.Bool("balancehash", true, "If false, then don't pass around balance hashes")
+	enablenetPtr := params.Bool("enablenet", true, "Enable or disable networking")
+	waitEntriesPtr := params.Bool("waitentries", false, "Wait for Entries to be validated prior to execution of messages")
+	listenToPtr := params.Int("node", 0, "Node Number the simulator will set as the focus")
+	cntPtr := params.Int("count", 1, "The number of nodes to generate")
+	netPtr := params.String("net", "tree", "The default algorithm to build the network connections")
+	fnetPtr := params.String("fnet", "", "Read the given file to build the network connections")
+	dropPtr := params.Int("drop", 0, "Number of messages to drop out of every thousand")
+	journalPtr := params.String("journal", "", "Rerun a Journal of messages")
+	journalingPtr := params.Bool("journaling", false, "Write a journal of all messages received. Default is off.")
+	followerPtr := params.Bool("follower", false, "If true, force node to be a follower.  Only used when replaying a journal.")
+	leaderPtr := params.Bool("leader", true, "If true, force node to be a leader.  Only used when replaying a journal.")
+	dbPtr := params.String("db", "", "Override the Database in the Config file and use this Database implementation. Options Map, LDB, or Bolt")
+	cloneDBPtr := params.String("clonedb", "", "Override the main node and use this database for the clones in a Network.")
+	networkNamePtr := params.String("network", "", "Network to join: MAIN, TEST or LOCAL")
+	peersPtr := params.String("peers", "", "Array of peer addresses. ")
+	blkTimePtr := params.Int("blktime", 0, "Seconds per block.  Production is 600.")
 	// TODO: Old fault mechanism -- remove
-	//	faultTimeoutPtr := flag.Int("faulttimeout", 99999, "Seconds before considering Federated servers at-fault. Default is 30.")
-	runtimeLogPtr := flag.Bool("runtimeLog", false, "If true, maintain runtime logs of messages passed.")
-	exclusivePtr := flag.Bool("exclusive", false, "If true, we only dial out to special/trusted peers.")
-	PrefixNodePtr := flag.String("Prefix", "", "Prefix the Factom Node Names with this value; used to create leaderless networks.")
-	RotatePtr := flag.Bool("Rotate", false, "If true, responsibility is owned by one leader, and Rotated over the leaders.")
-	TimeOffsetPtr := flag.Int("timedelta", 0, "Maximum timeDelta in milliseconds to offset each node.  Simulates deltas in system clocks over a network.")
-	KeepMismatchPtr := flag.Bool("keepmismatch", false, "If true, do not discard DBStates even when a majority of DBSignatures have a different hash")
-	startDelayPtr := flag.Int("startdelay", 10, "Delay to start processing messages, in seconds")
-	DeadlinePtr := flag.Int("Deadline", 1000, "Timeout Delay in milliseconds used on Reads and Writes to the network comm")
-	CustomNetPtr := flag.String("customnet", "", "This string specifies a custom blockchain network ID.")
-	RpcUserflag := flag.String("rpcuser", "", "Username to protect factomd local API with simple HTTP authentication")
-	RpcPasswordflag := flag.String("rpcpass", "", "Password to protect factomd local API. Ignored if rpcuser is blank")
-	FactomdTLSflag := flag.Bool("tls", false, "Set to true to require encrypted connections to factomd API and Control Panel") //to get tls, run as "factomd -tls=true"
-	FactomdLocationsflag := flag.String("selfaddr", "", "comma separated IPAddresses and DNS names of this factomd to use when creating a cert file")
-	MemProfileRate := flag.Int("mpr", 512*1024, "Set the Memory Profile Rate to update profiling per X bytes allocated. Default 512K, set to 1 to profile everything, 0 to disable.")
-	exposeProfilePtr := flag.Bool("exposeprofiler", false, "Setting this exposes the profiling port to outside localhost.")
-	factomHomePtr := flag.String("factomhome", "", "Set the Factom home directory. The .factom folder will be placed here if set, otherwise it will default to $HOME")
+	//	faultTimeoutPtr := params.Int("faulttimeout", 99999, "Seconds before considering Federated servers at-fault. Default is 30.")
+	runtimeLogPtr := params.Bool("runtimeLog", false, "If true, maintain runtime logs of messages passed.")
+	exclusivePtr := params.Bool("exclusive", false, "If true, we only dial out to special/trusted peers.")
+	PrefixNodePtr := params.String("Prefix", "", "Prefix the Factom Node Names with this value; used to create leaderless networks.")
+	RotatePtr := params.Bool("Rotate", false, "If true, responsibility is owned by one leader, and Rotated over the leaders.")
+	TimeOffsetPtr := params.Int("timedelta", 0, "Maximum timeDelta in milliseconds to offset each node.  Simulates deltas in system clocks over a network.")
+	KeepMismatchPtr := params.Bool("keepmismatch", false, "If true, do not discard DBStates even when a majority of DBSignatures have a different hash")
+	startDelayPtr := params.Int("startdelay", 10, "Delay to start processing messages, in seconds")
+	DeadlinePtr := params.Int("Deadline", 1000, "Timeout Delay in milliseconds used on Reads and Writes to the network comm")
+	CustomNetPtr := params.String("customnet", "", "This string specifies a custom blockchain network ID.")
+	RpcUserflag := params.String("rpcuser", "", "Username to protect factomd local API with simple HTTP authentication")
+	RpcPasswordflag := params.String("rpcpass", "", "Password to protect factomd local API. Ignored if rpcuser is blank")
+	FactomdTLSflag := params.Bool("tls", false, "Set to true to require encrypted connections to factomd API and Control Panel") //to get tls, run as "factomd -tls=true"
+	FactomdLocationsflag := params.String("selfaddr", "", "comma separated IPAddresses and DNS names of this factomd to use when creating a cert file")
+	MemProfileRate := params.Int("mpr", 512*1024, "Set the Memory Profile Rate to update profiling per X bytes allocated. Default 512K, set to 1 to profile everything, 0 to disable.")
+	exposeProfilePtr := params.Bool("exposeprofiler", false, "Setting this exposes the profiling port to outside localhost.")
+	factomHomePtr := params.String("factomhome", "", "Set the Factom home directory. The .factom folder will be placed here if set, otherwise it will default to $HOME")
 
-	logportPtr := flag.String("logPort", "6060", "Port for pprof logging")
-	portOverridePtr := flag.Int("port", 0, "Port where we serve WSAPI;  default 8088")
-	ControlPanelPortOverridePtr := flag.Int("ControlPanelPort", 0, "Port for control panel webserver;  Default 8090")
-	networkPortOverridePtr := flag.Int("networkPort", 0, "Port for p2p network; default 8110")
+	logportPtr := params.String("logPort", "6060", "Port for pprof logging")
+	portOverridePtr := params.Int("port", 0, "Port where we serve WSAPI;  default 8088")
+	ControlPanelPortOverridePtr := params.Int("ControlPanelPort", 0, "Port for control panel webserver;  Default 8090")
+	networkPortOverridePtr := params.Int("networkPort", 0, "Port for p2p network; default 8110")
 
-	FastPtr := flag.Bool("Fast", true, "If true, factomd will Fast-boot from a file.")
-	FastLocationPtr := flag.String("Fastlocation", "", "Directory to put the Fast-boot file in.")
+	FastPtr := params.Bool("Fast", true, "If true, factomd will Fast-boot from a file.")
+	FastLocationPtr := params.String("Fastlocation", "", "Directory to put the Fast-boot file in.")
 
-	logLvlPtr := flag.String("Loglvl", "none", "Set log level to either: none, debug, info, warning, error, fatal or panic")
-	logJsonPtr := flag.Bool("Logjson", false, "Use to set logging to use a json formatting")
+	logLvlPtr := params.String("Loglvl", "none", "Set log level to either: none, debug, info, warning, error, fatal or panic")
+	logJsonPtr := params.Bool("Logjson", false, "Use to set logging to use a json formatting")
 
-	sim_stdinPtr := flag.Bool("sim_stdin", true, "If true, sim control reads from stdin.")
+	sim_stdinPtr := params.Bool("sim_stdin", true, "If true, sim control reads from stdin.")
 
 	// Plugins
-	PluginPath := flag.String("plugin", "", "Input the path to any plugin binaries")
+	PluginPath := params.String("plugin", "", "Input the path to any plugin binaries")
 
 	// 	Torrent Plugin
-	tormanager := flag.Bool("tormanage", false, "Use torrent dbstate manager. Must have plugin binary installed and in $PATH")
-	TorUploader := flag.Bool("torupload", false, "Be a torrent uploader")
+	tormanager := params.Bool("tormanage", false, "Use torrent dbstate manager. Must have plugin binary installed and in $PATH")
+	TorUploader := params.Bool("torupload", false, "Be a torrent uploader")
 
 	// Logstash connection (if used)
-	logstash := flag.Bool("logstash", false, "If true, use Logstash")
-	LogstashURL := flag.String("logurl", "localhost:8345", "Endpoint URL for Logstash")
+	logstash := params.Bool("logstash", false, "If true, use Logstash")
+	LogstashURL := params.String("logurl", "localhost:8345", "Endpoint URL for Logstash")
 
-	sync2Ptr := flag.Int("sync2", -1, "Set the initial blockheight for the second Sync pass. Used to force a total sync, or skip unnecessary syncing of entries.")
+	sync2Ptr := params.Int("sync2", -1, "Set the initial blockheight for the second Sync pass. Used to force a total sync, or skip unnecessary syncing of entries.")
 
-	flag.StringVar(&p.DebugConsole, "debugconsole", "", "Enable DebugConsole on port. localhost:8093 open 8093 and spawns a telnet console, remotehost:8093 open 8093")
-	flag.StringVar(&p.StdoutLog, "stdoutlog", "", "Log stdout to a file")
-	flag.StringVar(&p.StderrLog, "stderrlog", "", "Log stderr to a file, optionally the same file as stdout")
-	flag.StringVar(&p.DebugLogRegEx, "debuglog", "off", "regex to pick which logs to save")
-	flag.IntVar(&elections.FaultTimeout, "faulttimeout", 30, "Seconds before considering Federated servers at-fault. Default is 30.")
-	flag.CommandLine.Parse(args)
+	params.StringVar(&p.DebugConsole, "debugconsole", "", "Enable DebugConsole on port. localhost:8093 open 8093 and spawns a telnet console, remotehost:8093 open 8093")
+	params.StringVar(&p.StdoutLog, "stdoutlog", "", "Log stdout to a file")
+	params.StringVar(&p.StderrLog, "stderrlog", "", "Log stderr to a file, optionally the same file as stdout")
+	params.StringVar(&p.DebugLogRegEx, "debuglog", "off", "regex to pick which logs to save")
+	params.IntVar(&elections.FaultTimeout, "faulttimeout", 30, "Seconds before considering Federated servers at-fault. Default is 30.")
+	//params.CommandLine.Parse(args)
+
+	// Good for unit testing
+	disablePrometheus := params.Bool("disableprometheus", false, "Can be used to disable prometheus")
+
+	params.Parse(args)
 
 	p.AckbalanceHash = *ackBalanceHashPtr
 	p.EnableNet = *enablenetPtr
@@ -142,6 +148,7 @@ func ParseCmdLine(args []string) *FactomParams {
 	p.LogstashURL = *LogstashURL
 
 	p.Sync2 = *sync2Ptr
+	p.DisablePrometheus = *disablePrometheus
 
 	if *factomHomePtr != "" {
 		os.Setenv("FACTOM_HOME", *factomHomePtr)

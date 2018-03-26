@@ -120,6 +120,9 @@ func SimControl(listenTo int, listenStdin bool) {
 			connectionMetricsChannel := make(chan interface{}, p2p.StandardChannelSize)
 			go controlPanel.ServeControlPanel(fnodes[ListenTo].State.ControlPanelChannel, fnodes[ListenTo].State, connectionMetricsChannel, p2pNetwork, Build)
 		} else {
+			if b == "return" {
+				return
+			}
 			switch {
 			case '!' == b[0]:
 				if ListenTo < 0 || ListenTo > len(fnodes) {

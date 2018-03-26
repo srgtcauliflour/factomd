@@ -69,7 +69,15 @@ func WaitMinutes(s *state.State, min int) {
 	TimeNow(s)
 }
 
+// Reset a run
+func Reset() {
+	// Reset fnodes
+	newF := make([]*FactomNode, 0)
+	SetFNodes(newF)
+}
+
 func TestSetupANetwork(t *testing.T) {
+	Reset()
 
 	runCmd := func(cmd string) {
 		os.Stderr.WriteString("Executing: " + cmd + "\n")
@@ -221,6 +229,10 @@ func TestSetupANetwork(t *testing.T) {
 	runCmd("g3")
 	WaitBlocks(fn1.State, 1)
 
+	//Turn off prints
+	runCmd("s")
+	runCmd("r")
+
 	t.Log("Shutting down the network")
 	for _, fn := range GetFnodes() {
 		fn.State.ShutdownChan <- 1
@@ -230,9 +242,11 @@ func TestSetupANetwork(t *testing.T) {
 	if state0.LLeaderHeight > 13 {
 		t.Fatal("Failed to shut down factomd via ShutdownChan")
 	}
+	runCmd("return")
 }
 
 func TestAnElection(t *testing.T) {
+	Reset()
 
 	var (
 		leaders   int = 3
@@ -260,6 +274,10 @@ func TestAnElection(t *testing.T) {
 		"-debuglog=F.*",
 		"--stdoutlog=out.txt",
 		"--stderrlog=err.txt",
+		"-logPort=0",
+		"-port=0",
+		"-ControlPanelPort=0",
+		"-disableprometheus",
 	)
 	params := ParseCmdLine(args)
 
@@ -268,7 +286,7 @@ func TestAnElection(t *testing.T) {
 	state0.MessageTally = true
 	time.Sleep(5 * time.Second) // wait till the simulation is setup
 
-	t.Log(fmt.Sprintf("Allocated %d nodes", nodes))
+	t.Log(fmt.Sprintf("Allocated %d nodes", len(fnodes)))
 	fnodes := GetFnodes()
 	if len(fnodes) != nodes {
 		t.Fatalf("Should have allocated %d nodes", nodes)

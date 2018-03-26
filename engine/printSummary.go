@@ -15,6 +15,9 @@ func printSummary(summary *int, value int, listenTo *int, wsapiNode *int) {
 	}
 
 	for *summary == value {
+		if len(fnodes) == 0 {
+			break
+		}
 		PrintOneStatus(*listenTo, *wsapiNode)
 
 		time.Sleep(time.Second)

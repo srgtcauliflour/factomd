@@ -14,6 +14,7 @@ import (
 	"os"
 	"time"
 
+	. "github.com/FactomProject/factomd/common/globals"
 	"github.com/FactomProject/factomd/common/identity"
 	"github.com/FactomProject/factomd/common/interfaces"
 	"github.com/FactomProject/factomd/common/messages/electionMsgs"
@@ -24,7 +25,6 @@ import (
 	"github.com/FactomProject/factomd/state"
 	"github.com/FactomProject/factomd/util"
 	"github.com/FactomProject/factomd/wsapi"
-	. "github.com/FactomProject/factomd/common/globals"
 
 	"github.com/FactomProject/factomd/common/messages"
 	"github.com/FactomProject/factomd/common/messages/msgsupport"
@@ -51,6 +51,11 @@ var logPort string
 
 func GetFnodes() []*FactomNode {
 	return fnodes
+}
+
+
+func SetFNodes(newFnodes []*FactomNode) {
+	fnodes = newFnodes
 }
 
 func init() {
@@ -504,7 +509,9 @@ func NetStart(s *state.State, p *FactomParams, listenToStdin bool) {
 	wsapi.Start(fnodes[0].State)
 
 	// Start prometheus on port
-	launchPrometheus(9876)
+	if p.DisablePrometheus { // Unit tests disable this
+		launchPrometheus(9876)
+	}
 	// Start Package's prometheus
 	state.RegisterPrometheus()
 	p2p.RegisterPrometheus()
